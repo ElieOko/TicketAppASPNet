@@ -140,3 +140,4 @@ C:\Users\elieo\source\repos\TicketApp\TicketApp\bin\Debug\net8.0\runtimes\win\li
 C:\Users\elieo\source\repos\TicketApp\TicketApp\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 C:\Users\elieo\source\repos\TicketApp\TicketApp\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\elieo\source\repos\TicketApp\TicketApp\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\elieo\source\repos\TicketApp\TicketApp\obj\Debug\net8.0\TicketApp.sourcelink.json
