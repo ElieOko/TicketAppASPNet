@@ -1,9 +1,10 @@
 ﻿using TicketApp.Data;
+using TicketApp.Interfaces;
 using TicketApp.Models;
 
 namespace TicketApp.Repository
 {
-    public class UserRepository
+    public class UserRepository : IUser
     {
         private readonly DataContext _context;
         public UserRepository(DataContext context) 
