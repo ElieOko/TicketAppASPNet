@@ -4,6 +4,7 @@ namespace TicketApp.Interfaces
 {
     public interface IBranch
     {
-        ICollection<Branch> GetAll();
+        Task<ICollection<Branch>> GetAll();
+        Task<bool> Delete(int id);
     }
 }
