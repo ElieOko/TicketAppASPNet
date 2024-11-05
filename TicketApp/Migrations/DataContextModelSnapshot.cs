@@ -440,12 +440,18 @@ namespace TicketApp.Migrations
                     b.Property<byte?>("AccessLevel")
                         .HasColumnType("tinyint");
 
+                    b.Property<string>("AccessToken")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("BranchFId")
                         .HasColumnType("int")
                         .HasColumnName("BranchFId");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("ExpiresIn")
+                        .HasColumnType("int");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -463,6 +469,9 @@ namespace TicketApp.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserSalt")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isAdmin")
