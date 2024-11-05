@@ -14,7 +14,14 @@ namespace TicketApp.Repository
 
         public async Task<ICollection<Branch>> GetAll() 
         {
-            return await _context.Branches.OrderBy(p => p.BranchId).ToListAsync();
+            return await _context.Branches
+               .Include(u => u.transferts)
+               .Include(u => u.Users)
+               .Include(u => u.orderNumbers)
+               .Include(u => u.counters)
+               .OrderBy(p => p.BranchId)
+               .ToListAsync();
+       
         }
         public async Task<bool> Delete(int id) 
         {

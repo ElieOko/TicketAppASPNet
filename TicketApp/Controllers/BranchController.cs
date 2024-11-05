@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TicketApp.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TicketApp.Controllers
 {
@@ -26,7 +27,7 @@ namespace TicketApp.Controllers
             public string? Message { get; set; }
             public T? Data { get; set; }
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<ApiResponse<IEnumerable<Branch>>>> GetBranches()
         {
@@ -40,7 +41,7 @@ namespace TicketApp.Controllers
 
             return Ok(response);
         }
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResponse<Branch>>> GetBranch(int id)
         {
