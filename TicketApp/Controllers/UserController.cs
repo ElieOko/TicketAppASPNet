@@ -10,6 +10,7 @@ using System;
 using TicketApp.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace TicketApp.Controllers
 {
@@ -64,7 +65,7 @@ namespace TicketApp.Controllers
             var response = new ApiResponse<User>
             {
                 Success = true,
-                Message = "User created successfully.",
+                Message = "User retrieved successfully.",
                 Data = user
             };
 
@@ -72,146 +73,203 @@ namespace TicketApp.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ApiResponse<User>> Register([FromBody] User user)
+        public async Task<IActionResult> Register([FromBody] User user)
         {
             if (string.IsNullOrWhiteSpace(user.UserName) || string.IsNullOrWhiteSpace(user.Password))
             {
-                return new ApiResponse<User>
+                return BadRequest(new ApiResponse<UserLoginModel>
                 {
                     Success = false,
                     Message = "Username and password are required.",
                     Data = null,
-                };
+                });
             }
 
             var result = await _userRepository.Register(user);
             if (result == null)
             {
-                return new ApiResponse<User>
+                return BadRequest(new ApiResponse<User>
                 {
                     Success = false,
-                    Message = "Username already exists.",
+                    Message = "Ce compte existe déjà",
                     Data = null
-                };
+                });
             }
 
-            return new ApiResponse<User>
+            return Ok( new ApiResponse<User>
             {
                 Success = true,
-                Message = "User registered successfully.",
+                Message = "Compte créé avec succès",
                 Data = result
-            };
+            });
         }
 
         [HttpPost("login")]
-        public async Task<ApiResponse<UserLoginModel>> Login([FromBody] UserLoginModel userLogin)
+        public async Task<IActionResult> Login([FromBody] UserLoginModel userLogin)
         {
             if (string.IsNullOrWhiteSpace(userLogin.Username) || string.IsNullOrWhiteSpace(userLogin.Password))
-                return new ApiResponse<UserLoginModel>
+            {
+                return BadRequest(new ApiResponse<UserLoginModel>
                 {
                     Success = false,
                     Message = "Username and password are required.",
                     Data = null,
+                });
+            }
 
-                };
+            var userAccount = await _dataContext.Users
+          .FirstOrDefaultAsync(x => x.UserName.ToLower() == userLogin.Username.ToLower());
 
-            var userAccount = await _dataContext.Users.FirstOrDefaultAsync(x => x.UserName == userLogin.Username);
-            _logger.LogInformation($"User account fetched: {userAccount}");
+            _logger.LogInformation($"User account : {userAccount}");
 
             if (userAccount == null)
             {
-                return new ApiResponse<UserLoginModel>
+                return NotFound(new ApiResponse<UserLoginModel>
                 {
                     Success = false,
-                    Message = "Invalid username",
+                    Message = "Ce compte utilisateur n'existe pas",
                     Data = null,
-                    //DebugInfo = $"Username attempted: {userLogin.Username}" // Ajoutez cette ligne
-                };
+                });
+            }
+            var supportHelp = $"Si vous avez oublié votre mot de passe, contactez le support d'aide au 0854434602";
+
+            if (userAccount.Locked)
+            {
+                return BadRequest(new ApiResponse<UserLoginModel>
+                {
+                    Success = false,
+                    Message = $"Votre compte est verrouillé en raison de nombreuses tentatives de connexion échouées. <br> {supportHelp}",
+                    Data = null,
+                });
             }
 
+
+
             byte[] storedSalt = Convert.FromBase64String(userAccount.UserSalt);
-            _logger.LogInformation($"UBINGOOOOOOOOOOOOOOOO: {storedSalt.Length}");
 
             if (!PaaswordHasher.VerifyPasswordHash(userLogin.Password, Convert.FromBase64String(userAccount.Password), storedSalt))
             {
-                return new ApiResponse<UserLoginModel>
+                userAccount.MaxAttempt++;
+               
+
+                if (userAccount.MaxAttempt >= 5)
+                {
+                    userAccount.Locked = true;
+                    await _dataContext.SaveChangesAsync();
+                    return BadRequest(new ApiResponse<UserLoginModel>
+                    {
+                        Success = false,
+                        Message = $"Votre compte est verrouillé en raison de nombreuses tentatives de connexion échouées. <br> {supportHelp}",
+                        Data = null,
+                    });
+                }
+
+              
+                int ? tentativeRestantes = 5 - userAccount.MaxAttempt;
+                string msg = tentativeRestantes == 1
+                    ? $"Il vous reste une tentative avant que votre compte ne soit bloqué. <br> {supportHelp}"
+                    : $"Tu as {tentativeRestantes} tentatives restantes avant que votre compte ne soit bloqué. <br> {supportHelp}";
+
+                await _dataContext.SaveChangesAsync(); 
+                return BadRequest(new ApiResponse<UserLoginModel>
                 {
                     Success = false,
-                    Message = "Invalid password.",
+                    Message = $"Mot de passe incorrect.<br>{msg}",
                     Data = null
-                };
+                });
             }
 
+            userAccount.MaxAttempt = 0;
 
             var tokenResponse = await _jwtServices.Authentificate(userLogin);
-            _logger.LogInformation($"Obama: {tokenResponse}");
-
 
             if (tokenResponse == null)
             {
-                return new ApiResponse<UserLoginModel>
+                return BadRequest(new ApiResponse<UserLoginModel>
                 {
                     Success = false,
                     Message = "Authentication failed.",
                     Data = null
-                };
+                });
             }
+
             userAccount.AccessToken = tokenResponse?.AccessToken;
             userAccount.ExpiresIn = tokenResponse?.ExpiresIn;
-
 
             _dataContext.Users.Update(userAccount);
             await _dataContext.SaveChangesAsync();
 
-            return new ApiResponse<UserLoginModel>
+            return Ok(new ApiResponse<UserLoginModel>
             {
                 Success = true,
-                Message = "Authentication successful.",
+                Message = "Authentication reussie.",
                 Data = tokenResponse
-            };
+            });
         }
         [Authorize]
         [HttpPost("resetPassword/{id}")]
-        public async Task<ApiResponse<User>> ChangePassword([FromBody] ResetPasswordModel resetPasswordModel, int id)
+        public async Task<IActionResult> ChangePassword([FromBody] ResetPasswordModel resetPasswordModel, int id)
         {
             if (string.IsNullOrWhiteSpace(resetPasswordModel.NewPassword) ||
                 string.IsNullOrWhiteSpace(resetPasswordModel.ConfirmPassword))
             {
-                return new ApiResponse<User>
+                return BadRequest( new ApiResponse<User>
                 {
                     Success = false,
                     Message = "New password and Confirm password are required.",
                     Data = null
-                };
+                });
             }
             if (resetPasswordModel.NewPassword != resetPasswordModel.ConfirmPassword)
             {
-                return new ApiResponse<User>
+                return NotFound( new ApiResponse<User>
                 {
                     Success = false,
-                    Message = "New password and Confirm password must match.",
+                    Message = "Le nouveau mot de passe et Confirmer le mot de passe doivent correspondre.",
                     Data = null
-                };
+                });
             }
             var result = await _userRepository.ResetPassword(id, resetPasswordModel);
             if (result == null)
             {
-                return new ApiResponse<User>
+                return NotFound( new ApiResponse<User>
                 {
                     Success = false,
-                    Message = "User not found.",
+                    Message = "Compte utilisateur non trouvé.",
                     Data = null
-                };
+                });
             }
 
-            return new ApiResponse<User>
+            return Ok( new ApiResponse<User>
             {
                 Success = true,
-                Message = "Password changed successfully.",
+                Message = "Mot de passe changé avec succés.",
                 Data = result
-            };
+            });
 
         }
-    
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ApiResponse<bool>>> Delete(int id)
+        {
+            var success = await _userRepository.Delete(id);
+            if (!success)
+            {
+                return NotFound(new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Ce compte n'existe pas.",
+                    Data = false
+                });
+            }
+
+            return Ok(new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Compte utilisateur supprime avec succ.",
+                Data = true
+            });
+        }
+
     }
 }
