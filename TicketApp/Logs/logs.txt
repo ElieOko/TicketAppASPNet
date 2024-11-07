@@ -1,0 +1,24 @@
+2024-11-06 14:02:45.373 +01:00 [INF] Hello, Serilog!
+2024-11-06 14:09:37.466 +01:00 [INF] yes
+2024-11-06 14:09:38.547 +01:00 [INF] yes
+2024-11-06 15:13:14.550 +01:00 [WRN] Tentative d'enregistrement avec un nom d'utilisateur existant : Candy
+2024-11-06 15:13:16.060 +01:00 [WRN] Tentative d'enregistrement avec un nom d'utilisateur existant : Candy
+2024-11-06 15:13:46.674 +01:00 [INF] {"Action":"Création compte utilisateur","UserName":"Freddy","Timestamp":"2024-11-06T14:13:46.6743646Z","Message":"Compte créé avec succès.","$type":"LogEntry"}
+2024-11-06 15:27:18.278 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : Freddy
+2024-11-06 15:27:29.570 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : Freddy
+2024-11-06 15:27:49.788 +01:00 [WRN] Échec de la tentative de connexion pour l'utilisateur inexistant : Fredssdy
+2024-11-06 15:27:52.861 +01:00 [WRN] Échec de la tentative de connexion pour l'utilisateur inexistant : Fredssdy
+2024-11-06 15:27:59.771 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : Freddy
+2024-11-06 15:28:02.172 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : Freddy
+2024-11-06 15:28:03.324 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : Freddy
+2024-11-06 15:28:04.318 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : Freddy
+2024-11-06 15:28:13.709 +01:00 [WRN] Compte est verrouillé : Freddy
+2024-11-06 15:32:21.184 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : Candy
+2024-11-06 15:32:26.184 +01:00 [INF] {"Action":"Connexion","UserName":"Candy","Timestamp":"2024-11-06T14:32:26.1846050Z","Message":"Authentification réussie.","$type":"LogEntry"}
+2024-11-06 15:33:48.548 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : candy
+2024-11-06 15:33:52.052 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : candy
+2024-11-06 15:33:58.128 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : candy
+2024-11-06 15:33:59.430 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : candy
+2024-11-06 15:34:00.415 +01:00 [INF] {"Action":"Connexion","UserName":"candy","Timestamp":"2024-11-06T14:34:00.4155312Z","Message":"Authentification réussie.","$type":"LogEntry"}
+2024-11-07 12:25:51.307 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : candy
+2024-11-07 12:25:55.597 +01:00 [WRN] Échec de la tentative de connexion pour Mot de passe incorrect : candy
