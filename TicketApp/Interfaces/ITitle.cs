@@ -4,6 +4,7 @@ namespace TicketApp.Interfaces
 {
     public interface ITitle
     {
-        ICollection<Title> GetAll();
+        Task<ICollection<Title>> GetAll();
+        Task<bool> Delete(int id);
     }
 }

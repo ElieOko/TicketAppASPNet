@@ -1,9 +1,11 @@
-﻿using TicketApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TicketApp.Data;
+using TicketApp.Interfaces;
 using TicketApp.Models;
 
 namespace TicketApp.Repository
 {
-    public class TitleRepository
+    public class TitleRepository:ITitle
     {
         private readonly DataContext _context;
         public TitleRepository(DataContext context) 
@@ -11,9 +13,23 @@ namespace TicketApp.Repository
             _context = context;  
         }
 
-        public ICollection<Title> GetAll()
+        public async Task <ICollection<Title>> GetAll()
         {
-            return _context.Titles.OrderBy(p => p.TitleId).ToList();
+            return await _context.Titles.Include(u=>u.customers).ToListAsync();
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+            var title = await _context.Titles.FindAsync(id);
+            if (title == null)
+            {
+                return false;
+            }
+
+            _context.Titles.Remove(title);
+            var result = await _context.SaveChangesAsync();
+
+            return result > 0;
         }
     }
 }
