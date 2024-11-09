@@ -11,6 +11,7 @@ using TicketApp.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Serilog;
 
 namespace TicketApp.Controllers
 {
@@ -32,6 +33,13 @@ namespace TicketApp.Controllers
             _jwtServices = jwtServices;
             _configuration = configuration;
         }
+
+
+
+        /// <summary>
+        /// You can search for Accounts here.
+        /// </summary>
+
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<ApiResponse<IEnumerable<User>>>> GetUsers()
@@ -51,7 +59,7 @@ namespace TicketApp.Controllers
         public async Task<ActionResult<ApiResponse<User>>> GetUser(int id)
         {
             var user = await _userRepository.GetUser(id);
- 
+
             if (user == null)
             {
                 return NotFound(new ApiResponse<User>
@@ -72,7 +80,10 @@ namespace TicketApp.Controllers
             return Ok(response);
         }
 
+        
+
         [HttpPost("register")]
+
         public async Task<IActionResult> Register([FromBody] User user)
         {
             if (string.IsNullOrWhiteSpace(user.UserName) || string.IsNullOrWhiteSpace(user.Password))
@@ -86,8 +97,14 @@ namespace TicketApp.Controllers
             }
 
             var result = await _userRepository.Register(user);
+            using var log = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("Logs/logs.txt")
+                .CreateLogger();
+
             if (result == null)
             {
+                log.Warning("Tentative d'enregistrement avec un nom d'utilisateur existant : {Username}", user.UserName);
                 return BadRequest(new ApiResponse<User>
                 {
                     Success = false,
@@ -95,6 +112,15 @@ namespace TicketApp.Controllers
                     Data = null
                 });
             }
+            var logEntry = new LogEntry
+            {
+                Action = "Création compte utilisateur",
+                UserName = user.UserName,
+                Timestamp = DateTime.UtcNow,
+                Message = "Compte créé avec succès."
+            };
+
+            log.Information("{@LogEntry}", logEntry); // Enregistrer l'entrée de log
 
             return Ok( new ApiResponse<User>
             {
@@ -120,10 +146,13 @@ namespace TicketApp.Controllers
             var userAccount = await _dataContext.Users
           .FirstOrDefaultAsync(x => x.UserName.ToLower() == userLogin.Username.ToLower());
 
-            _logger.LogInformation($"User account : {userAccount}");
-
+            using var log = new LoggerConfiguration()
+              .WriteTo.Console()
+              .WriteTo.File("Logs/logs.txt")
+              .CreateLogger();
             if (userAccount == null)
             {
+                log.Warning("Échec de la tentative de connexion pour l'utilisateur inexistant : {Username}", userLogin.Username);
                 return NotFound(new ApiResponse<UserLoginModel>
                 {
                     Success = false,
@@ -143,8 +172,6 @@ namespace TicketApp.Controllers
                 });
             }
 
-
-
             byte[] storedSalt = Convert.FromBase64String(userAccount.UserSalt);
 
             if (!PaaswordHasher.VerifyPasswordHash(userLogin.Password, Convert.FromBase64String(userAccount.Password), storedSalt))
@@ -156,6 +183,7 @@ namespace TicketApp.Controllers
                 {
                     userAccount.Locked = true;
                     await _dataContext.SaveChangesAsync();
+                    log.Warning("Compte est verrouillé : {Username}", userLogin.Username);
                     return BadRequest(new ApiResponse<UserLoginModel>
                     {
                         Success = false,
@@ -170,7 +198,8 @@ namespace TicketApp.Controllers
                     ? $"Il vous reste une tentative avant que votre compte ne soit bloqué. <br> {supportHelp}"
                     : $"Tu as {tentativeRestantes} tentatives restantes avant que votre compte ne soit bloqué. <br> {supportHelp}";
 
-                await _dataContext.SaveChangesAsync(); 
+                await _dataContext.SaveChangesAsync();
+                log.Warning("Échec de la tentative de connexion pour Mot de passe incorrect : {Username}", userLogin.Username);
                 return BadRequest(new ApiResponse<UserLoginModel>
                 {
                     Success = false,
@@ -198,6 +227,16 @@ namespace TicketApp.Controllers
 
             _dataContext.Users.Update(userAccount);
             await _dataContext.SaveChangesAsync();
+
+            var logEntrySuccess = new LogEntry
+            {
+                Action = "Connexion",
+                UserName = userLogin.Username,
+                Timestamp = DateTime.UtcNow,
+                Message = "Authentification réussie."
+            };
+
+            log.Information("{@LogEntry}", logEntrySuccess); 
 
             return Ok(new ApiResponse<UserLoginModel>
             {
