@@ -19,6 +19,9 @@ builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddScoped<IBranch, BranchRepository>();
 builder.Services.AddScoped<IUser, UserRepository>();
+builder.Services.AddScoped<ICurrency, CurrencyRepository>();
+builder.Services.AddScoped<ITitle, TitleRepository>();
+builder.Services.AddScoped<ITransferType, TransferTypeRepository>();
 builder.Services.AddScoped<JwtServices>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
