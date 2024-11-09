@@ -4,6 +4,7 @@ namespace TicketApp.Interfaces
 {
     public interface ITransferType
     {
-        ICollection<TransferType> GetAll();
+        Task<ICollection<TransferType>> GetAll();
+        Task<bool> Delete(int id);
     }
 }
