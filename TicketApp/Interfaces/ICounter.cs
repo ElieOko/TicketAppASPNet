@@ -4,6 +4,7 @@ namespace TicketApp.Interfaces
 {
     public interface ICounter
     {
-        ICollection<Counter> GetAll();
+        Task<ICollection<Counter>> GetAll();
+        Task<bool> Delete(int id);
     }
 }
