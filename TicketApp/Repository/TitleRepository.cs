@@ -3,6 +3,7 @@ using TicketApp.Data;
 using TicketApp.Interfaces;
 using TicketApp.Models;
 
+
 namespace TicketApp.Repository
 {
     public class TitleRepository:ITitle

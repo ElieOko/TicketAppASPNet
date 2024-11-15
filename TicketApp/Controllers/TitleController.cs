@@ -129,6 +129,10 @@ namespace TicketApp.Controllers
             {
                 existingTitle.TitleName = title.TitleName;
             }
+            if (!string.IsNullOrEmpty(title.DisplayName))
+            {
+                existingTitle.DisplayName = title.DisplayName;
+            }
 
             var result = await _context.SaveChangesAsync();
 
