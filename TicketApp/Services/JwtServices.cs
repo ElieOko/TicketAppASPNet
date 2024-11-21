@@ -47,7 +47,10 @@ namespace TicketApp.Services
 
             {
                 Subject = new ClaimsIdentity(new[] {
-                    new Claim(JwtRegisteredClaimNames.Name,request.Username)
+                    new Claim(JwtRegisteredClaimNames.Name,request.Username),
+                    new Claim(ClaimTypes.NameIdentifier, userAccount.UserId.ToString())
+
+
                 }),
                 Expires = tokenExpirityTimesTamp,
                 Issuer = issuer,
