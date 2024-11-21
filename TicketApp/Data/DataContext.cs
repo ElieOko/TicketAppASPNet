@@ -19,6 +19,7 @@ namespace TicketApp.Data
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Transfert> Transferts { get; set;}
+        public DbSet<Ticket> Tickets  { get; set; }
         public DbSet<TransfertStatus> TransfertsStatus { get; set;}
         public DbSet<TransferType> TransferTypes { get; set; }
         public DbSet<Counter> Counters { get; set; }
@@ -94,7 +95,7 @@ namespace TicketApp.Data
                 .WithMany(p => p.transferts)
                 .HasForeignKey(p => p.BranchFId)
                 .HasPrincipalKey(p => p.BranchId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);        
 
             modelBuilder.Entity<Transfert>()
                 .HasOne(p => p.users)
@@ -129,6 +130,35 @@ namespace TicketApp.Data
                 .WithMany(p => p.transferts)
                 .HasForeignKey(p => p.IntervalFId)
                 .HasPrincipalKey(p => p.IntervalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(p => p.transfertStatus)
+                .WithMany(p => p.tickets)
+                .HasForeignKey(p => p.TransfertStatusFId)
+                .HasPrincipalKey(p => p.TransferStatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(p => p.transferType)
+                .WithMany(p => p.tickets)
+                .HasForeignKey(p => p.TransfertTypeFId)
+                .HasPrincipalKey(p => p.TransferTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(p => p.currency)
+                .WithMany(p => p.tickets)
+                .HasForeignKey(p => p.CurrencyFId)
+                .HasPrincipalKey(p => p.CurrencyId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(p => p.user)
+                .WithMany(p => p.tickets)
+                .HasForeignKey(p => p.UserFId)
+                .HasPrincipalKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
