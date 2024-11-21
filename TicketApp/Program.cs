@@ -12,7 +12,7 @@ using TicketApp.Services;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddHttpContextAccessor();
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(x =>
@@ -20,6 +20,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 builder.Services.AddScoped<IBranch, BranchRepository>();
 builder.Services.AddScoped<IUser, UserRepository>();
 builder.Services.AddScoped<ICurrency, CurrencyRepository>();
+builder.Services.AddScoped<ITicket, TicketRepository>();
 builder.Services.AddScoped<ITitle, TitleRepository>();
 builder.Services.AddScoped<ITransferType, TransferTypeRepository>();
 builder.Services.AddScoped<ICustomer, CustomerRepository>();
