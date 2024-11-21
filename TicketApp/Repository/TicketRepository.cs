@@ -5,33 +5,31 @@ using TicketApp.Models;
 
 namespace TicketApp.Repository
 {
-    public class TransfertRepository:ITransfert
+    public class TicketRepository:ITicket
     {
         private readonly DataContext _context;
-        public TransfertRepository(DataContext context)
+        public TicketRepository(DataContext context)
         {
             _context = context;
         }
-        public async Task<ICollection<Transfert>> GetAll()
+        public async Task<ICollection<Ticket>> GetAll()
         {
-            return await _context.Transferts
-               .Include(u => u.users)
-               .Include(u => u.currencies)
-               .Include(u => u.cards)
-               .Include(u => u.intervals)
+            return await _context.Tickets
+               .Include(u => u.user)
+               .Include(u => u.currency)
                .Include(u => u.transfertStatus)
-               .Include(u => u.branches)
+               .Include(u => u.transferType)
                .ToListAsync();
         }
         public async Task<bool> Delete(int id)
         {
-            var transfert = await _context.Transferts.FindAsync(id);
-            if (transfert == null)
+            var ticket = await _context.Tickets.FindAsync(id);
+            if (ticket == null)
             {
                 return false;
             }
 
-            _context.Transferts.Remove(transfert);
+            _context.Tickets.Remove(ticket);
             var result = await _context.SaveChangesAsync();
 
             return result > 0;

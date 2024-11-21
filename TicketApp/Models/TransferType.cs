@@ -11,5 +11,6 @@ namespace TicketApp.Models
         public string DisplayName { get; set; } = string.Empty;
         public ICollection<Interval> intervals { get; } = new List<Interval>();
         public ICollection<OrderNumber> orderNumbers { get; } = new List<OrderNumber>();
+        public ICollection<Ticket> tickets { get; } = new List<Ticket>();
     }
 }

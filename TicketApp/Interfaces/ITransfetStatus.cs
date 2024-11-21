@@ -4,6 +4,7 @@ namespace TicketApp.Interfaces
 {
     public interface ITransfetStatus
     {
-        ICollection<TransfertStatus> GetAll();
+        Task<ICollection<TransfertStatus>> GetAll();
+        Task<bool> Delete(int id);
     }
 }
