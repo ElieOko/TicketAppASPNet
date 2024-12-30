@@ -41,7 +41,7 @@ namespace TicketApp.Controllers
         public async Task<ActionResult<ApiResponse<TransfertStatus>>> GetTransfertStatus(int id)
         {
             var transfertStatus = await _context.TransfertsStatus
-                .Include(b => b.transferts)
+                .Include(b => b.tickets)
                 .FirstOrDefaultAsync(b => b.TransferStatusId == id);
 
             if (transfertStatus == null)
