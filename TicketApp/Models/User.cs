@@ -20,7 +20,6 @@ namespace TicketApp.Models
         public int? ExpiresIn { get; set; }
         public string? UserSalt { get; set; }
         public Branch? branch { get; set; }
-        public ICollection<Transfert> transferts { get;} = new List<Transfert>();
         public ICollection<Ticket> tickets { get; } = new List<Ticket>();
         public ICollection<Call> calls { get;} = new List<Call>();
     }
