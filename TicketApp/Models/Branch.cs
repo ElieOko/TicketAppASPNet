@@ -10,7 +10,6 @@ namespace TicketApp.Models
         public string BranchName { get; set; } = string.Empty;
         public string BranchZone { get; set; } = string.Empty;
         public ICollection<User> Users { get; } = new List<User>();
-        public ICollection<Transfert> transferts { get; } = new List<Transfert>();
         public ICollection<Ticket> tickets { get; } = new List<Ticket>();
         public ICollection<Counter> counters { get; } = new List<Counter>();
         public ICollection<OrderNumber> orderNumbers { get; } = new List<OrderNumber>();
