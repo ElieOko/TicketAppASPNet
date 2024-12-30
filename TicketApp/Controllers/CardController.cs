@@ -41,7 +41,6 @@ namespace TicketApp.Controllers
         public async Task<ActionResult<ApiResponse<Card>>> GetCard(int id)
         {
             var card = await _context.Cards
-                .Include(b => b.transferts)
                 .FirstOrDefaultAsync(b => b.CardId == id);
 
             if (card == null)

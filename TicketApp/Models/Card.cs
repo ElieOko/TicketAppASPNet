@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography.Xml;
 
 namespace TicketApp.Models
 {
@@ -7,6 +8,5 @@ namespace TicketApp.Models
     {
         public int CardId { get; set; }
         public string CardName { get; set; } = string.Empty;
-        public ICollection<Transfert> transferts { get; } = new List<Transfert>();
     }
 }
