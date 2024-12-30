@@ -12,11 +12,13 @@ using TicketApp.Services;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
+//builder.WebHost.UseUrls("http://localhost:6969");
 builder.Services.AddHttpContextAccessor();
-// Add services to the container.
+// Add services to the container.    options.JsonSerializerOptions.MaxDepth = 64;
 
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddScoped<IBranch, BranchRepository>();
 builder.Services.AddScoped<IUser, UserRepository>();
 builder.Services.AddScoped<ICurrency, CurrencyRepository>();
@@ -25,7 +27,6 @@ builder.Services.AddScoped<ITitle, TitleRepository>();
 builder.Services.AddScoped<ITransferType, TransferTypeRepository>();
 builder.Services.AddScoped<ICustomer, CustomerRepository>();
 builder.Services.AddScoped<ITransfetStatus, TransfertStatusRepository>();
-builder.Services.AddScoped<ITransfert, TransfertRepository>();
 builder.Services.AddScoped<ICard, CardRepository>();
 builder.Services.AddScoped<ICounter, CounterRepository>();
 builder.Services.AddScoped<JwtServices>();
@@ -117,13 +118,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseRouting();
 app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();
+//var webSocketOptions = new WebSocketOptions
+//{
+//    KeepAliveInterval = TimeSpan.FromMinutes(2)
+//};
 
+//app.UseWebSockets(webSocketOptions);
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
