@@ -4,6 +4,7 @@ namespace TicketApp.Interfaces
 {
     public interface ICard
     {
-        ICollection<Card> GetAll();
+        Task<ICollection<Card>> GetAll();
+        Task<bool> Delete(int id);
     }
 }

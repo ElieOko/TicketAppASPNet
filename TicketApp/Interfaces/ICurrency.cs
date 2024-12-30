@@ -4,6 +4,7 @@ namespace TicketApp.Interfaces
 {
     public interface ICurrency
     {
-        ICollection<Currency> GetAll();
+        Task<ICollection<Currency>> GetAll();
+        Task<bool> Delete(int id);
     }
 }

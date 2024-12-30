@@ -82,6 +82,8 @@ namespace TicketApp.Repository
             PaaswordHasher.CreatePasswordHash(resetPasswordModel.NewPassword, out byte[] newPasswordHash, out byte[] newPasswordSalt);
             user.Password = Convert.ToBase64String(newPasswordHash);
             user.UserSalt = Convert.ToBase64String(newPasswordSalt);
+            user.MaxAttempt = 0;
+            user.Locked=false;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();

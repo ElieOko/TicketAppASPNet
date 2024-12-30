@@ -9,6 +9,7 @@ namespace TicketApp.Models
         public string CurrencyName { get; set; } = string.Empty;
         public string CurrencyCode { get; set; } = string.Empty;
         public ICollection<Transfert> transferts { get; } = new List<Transfert>();
+        public ICollection<Ticket> tickets { get; } = new List<Ticket>();
         public ICollection<Interval> intervals { get; } = new List<Interval>();
 
     }
