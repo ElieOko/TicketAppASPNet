@@ -16,7 +16,7 @@ namespace TicketApp.Repository
         public async Task<ICollection<TransfertStatus>> GetAll()
         {
             return await _context.TransfertsStatus
-               .Include(u => u.transferts)
+               .Include(u => u.tickets)
                .ToListAsync();
 
         }

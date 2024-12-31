@@ -14,6 +14,6 @@ namespace TicketApp.Models
         public int? Max { get; set; }
         public Currency? currencies { get; set; }
         public TransferType? transferTypes { get; set; }
-        public ICollection<Transfert> transferts { get; } = new List<Transfert>();
+        public ICollection<Ticket> tickets { get; } = new List<Ticket>();
     }
 }

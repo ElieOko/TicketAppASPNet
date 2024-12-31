@@ -16,7 +16,7 @@ namespace TicketApp.Repository
         public async Task<ICollection<Currency>> GetAll()
         {
             return await _context.Currencies
-                .Include(u=>u.transferts)
+                .Include(u=>u.tickets)
                 .Include(u => u.intervals)
                 .ToListAsync();
         }

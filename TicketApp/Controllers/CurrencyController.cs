@@ -41,7 +41,7 @@ namespace TicketApp.Controllers
         public async Task<ActionResult<ApiResponse<Currency>>> GetCurrency(int id)
         {
             var currency = await _context.Currencies
-                .Include(b => b.transferts)
+                .Include(b => b.tickets)
                 .Include(b => b.intervals)
                 .FirstOrDefaultAsync(b => b.CurrencyId == id);
 

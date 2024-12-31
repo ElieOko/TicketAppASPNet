@@ -18,7 +18,7 @@ namespace TicketApp.Repository
         {
 
             return await _context.Users
-                .Include(u => u.transferts) 
+                .Include(u => u.tickets) 
                 .Include(u => u.calls)
                 .Include(u => u.branch)
                 .OrderBy(p => p.UserId)
@@ -27,7 +27,7 @@ namespace TicketApp.Repository
         public async Task<User?> GetUser(int id)
         {
             return await _context.Users
-                .Include(u => u.transferts) 
+                .Include(u => u.tickets) 
                 .Include(u => u.calls)
                 .Include(u => u.branch)
                 .OrderBy(u => u.UserId)

@@ -1,11 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
-
-
-namespace TicketApp.Models
+﻿namespace TicketApp.Dto
 {
-    [Table("TTickets")]
-    public class Ticket
+    public class TicketDto
     {
         public int TicketId { get; set; }
         public int CurrencyFId { get; set; }
@@ -17,21 +12,16 @@ namespace TicketApp.Models
         public bool StatusChanged { get; set; }
         public string? Phone { get; set; } = string.Empty;
         public string? Motif { get; set; } = string.Empty;
+        public DateTime? DateCreated { get; set; }
         public string? HeureDebut { get; set; }
         public string? HeureFin { get; set; }
         public string? DureeS { get; set; }
-        public DateTime? DateCreated { get; set; }
         public DateTime? ClotureDateCreated { get; set; }
-        public User? user{ get; set; }
-        public TransfertStatus ? transfertStatus { get; set; }
-        public Branch ? branch{ get; set; }
-        public TransferType ? transferType { get; set; }
-        [JsonIgnore]
-        public Currency ? currency { get; set; }
+        public UserDto User { get; set; } = new UserDto();
+        public BranchDto Branch { get; set; }=new BranchDto();
+        public CurrencyDto Currency { get; set; } = new CurrencyDto();
+        public TransfertStatusDto TransfertStatus { get; set; } = new TransfertStatusDto();
+        public TransfertTypeDto TransferType { get; set; } = new TransfertTypeDto();
+    }
 
-    }
-    public class ChangeStatusTicket
-    {
-        public int TransfertStatusFId { get; set; }
-    }
 }

@@ -8,7 +8,6 @@ namespace TicketApp.Data
         public DataContext(DbContextOptions<DataContext> options):base(options) { 
         
         }
-
         public DbSet<Branch> Branches { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Call> Calls { get; set; }
@@ -18,7 +17,6 @@ namespace TicketApp.Data
         public DbSet<OrderNumber> OrderNumbers { get; set; }
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Transfert> Transferts { get; set;}
         public DbSet<Ticket> Tickets  { get; set; }
         public DbSet<TransfertStatus> TransfertsStatus { get; set;}
         public DbSet<TransferType> TransferTypes { get; set; }
@@ -89,49 +87,6 @@ namespace TicketApp.Data
                 .HasForeignKey(p => p.BranchFId)
                 .HasPrincipalKey(p => p.BranchId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Transfert>()
-                .HasOne(p => p.branches)
-                .WithMany(p => p.transferts)
-                .HasForeignKey(p => p.BranchFId)
-                .HasPrincipalKey(p => p.BranchId)
-                .OnDelete(DeleteBehavior.Restrict);        
-
-            modelBuilder.Entity<Transfert>()
-                .HasOne(p => p.users)
-                .WithMany(p => p.transferts)
-                .HasForeignKey(p => p.UserFId)
-                .HasPrincipalKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Transfert>()
-                .HasOne(p => p.currencies)
-                .WithMany(p => p.transferts)
-                .HasForeignKey(p => p.CurrencyFId)
-                .HasPrincipalKey(p => p.CurrencyId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Transfert>()
-                .HasOne(p => p.cards)
-                .WithMany(p => p.transferts)
-                .HasForeignKey(p => p.CardFId)
-                .HasPrincipalKey(p => p.CardId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Transfert>()
-                .HasOne(p => p.transfertStatus)
-                .WithMany(p => p.transferts)
-                .HasForeignKey(p => p.TransferStatusFId)
-                .HasPrincipalKey(p => p.TransferStatusId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Transfert>()
-                .HasOne(p => p.intervals)
-                .WithMany(p => p.transferts)
-                .HasForeignKey(p => p.IntervalFId)
-                .HasPrincipalKey(p => p.IntervalId)
-                .OnDelete(DeleteBehavior.Restrict);
-
 
             modelBuilder.Entity<Ticket>()
                 .HasOne(p => p.transfertStatus)

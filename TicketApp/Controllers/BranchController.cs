@@ -47,7 +47,7 @@ namespace TicketApp.Controllers
         {
             var branch = await _context.Branches
                 .Include(b => b.Users)
-                .Include(b => b.transferts)
+                .Include(b => b.tickets)
                 .Include(b => b.orderNumbers)
                 .Include(b => b.counters)
                 .FirstOrDefaultAsync(b => b.BranchId == id);
